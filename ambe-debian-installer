@@ -1,0 +1,128 @@
+#!/bin/bash
+#A tool to install AMBE server.
+#This is essentially a scripted version of:
+#https://github.com/LX3JL/xlxd/blob/master/ambed/readme
+#Step 1: Install Debian 8 or 9 and make sure it has internet and is up to date.
+#Step 2: Plug AMBE Chip(s) into computer.
+#Step 3: Run this script.
+#Step 4: Reboot
+#Step 5: Execute /ambed/run
+#"To start your AMBE server manually, start a screen session. Just type 'screen' "
+#"cd /ambe "
+#"./run "
+#"Leave screen session running"
+#
+#"To stop AMBE...."
+#"ps aux | grep ambe"
+#"kill <THE PID #>,Thats the official step for now"
+
+#Lets begin-------------------------------------------------------------------------------------------------
+WHO=$(whoami)
+#Have to be ROOT to run this script
+if [ "$WHO" != "root" ];
+then
+  echo ""
+  echo "You Must be root to run this script!!"
+  exit 0
+fi
+
+#Has to be a Debian variant.
+if [ ! -e "/etc/debian_version" ]
+then
+  echo ""
+  echo "This script is only tested in Debian 8,9 and x64 cpu Arch. for now."
+  #echo "This script is only tested in Debian 8,9 and Raspian Stretch for now."
+  exit 0
+fi
+
+#Gather variables
+LOCAL_IP=$(ip a | grep inet | grep "eth0\|en" | awk '{print $2}' | tr '/' ' ' | awk '{print $1}')
+ARC=$(lscpu | grep Arch | awk '{print $2}')
+X64=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-x86_64-1.4.6.tgz
+X32=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-i386-1.4.6.tgz
+#ARM=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-arm-v7-hf-1.4.8.gz
+
+#Install dependicies
+echo ""
+echo "Installing required software..."
+apt-get -y install wget
+apt-get -y install git
+apt-get -y install screen
+
+#XLX Specific
+apt-get -y install build-essential
+
+#Make Directories and get the FTDI driver.
+mkdir -p /ambed
+mkdir -p /root/ambed-install-files
+if [ ! -e /usr/local/lib/libftd2xx.so ]
+then
+  echo ""
+        echo "Downloading driver and installing it....."
+        cd /root/ambed-install-files
+        if [ "$ARC" = "x86_64" ]
+        then
+                wget $X64
+                tar xfvz libftd2xx-x86_64-1.4.6.tgz
+                cd release/build
+                cp libftd2xx.* /usr/local/lib
+                chmod 0755 /usr/local/lib/libftd2xx.so.1.4.6
+                ln -sf /usr/local/lib/libftd2xx.so.1.4.6 /usr/local/lib/libftd2xx.so
+        else
+                wget $X32
+                tar xfvz libftd2xx-i386-1.4.6.tgz
+                cd release/build
+                cp libftd2xx.* /usr/local/lib
+                chmod 0755 /usr/local/lib/libftd2xx.so.1.4.6
+                ln -sf /usr/local/lib/libftd2xx.so.1.4.6 /usr/local/lib/libftd2xx.so
+        fi
+else
+        echo ""
+        echo "It looks like the driver is already installed. If this is wrong, see what '/usr/local/lib/libftd2xx.so' is up to. Skipping FTDI Driver install. "
+fi
+
+#Time to get the xlx/ambe software from git
+echo ""
+echo "Getting xlx/ambed from github..."
+cd /root/ambed-install-files
+git clone https://github.com/LX3JL/xlxd.git
+echo ""
+echo "Installing ambed....."
+cd xlxd/ambed/
+make clean
+make
+make install
+if [ -e ambed ]
+then
+        echo "It looks like everything compiled successfully. There is an 'ambed' application file. "
+        else
+        echo "/ambe directory exists already, I dont need to add it."
+        exit 0
+fi
+cp ambed /ambed
+cp run /ambed
+chmod 755 /ambed/run
+sed -i "s/127.0.0.1/$LOCAL_IP/g" /ambed/run
+sed -i "s/sudo//g" /ambed/run
+
+#That should be it for the install.
+echo "************************************************************************"
+echo ""
+echo ""
+echo "To start your AMBE Server, start a screen session. Just type 'screen' "
+echo "cd /ambe "
+echo "./run "
+echo "Leave screen session running"
+echo ""
+echo ""
+echo "To stop AMBE...."
+echo "ps aux | grep ambe"
+echo "kill <THE PID #>"
+echo ""
+echo ""
+echo "************************************************************************"
+echo ""
+echo ""
+echo "After reading the above, reboot the server and you should be ready to start ambeD :) "
+echo ""
+echo ""
