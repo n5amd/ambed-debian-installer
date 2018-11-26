@@ -36,7 +36,7 @@ X64=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-x86_64-1.4.6.tgz
 X32=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-i386-1.4.6.tgz
 #ARM=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-arm-v7-hf-1.4.8.gz
 
-#Install dependicies
+#Install dependencies
 echo "------------------------------------------------------------------------------"
 echo "Installing required software..."
 apt-get -y install wget
