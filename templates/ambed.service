@@ -1,0 +1,12 @@
+[Unit]
+Description=AMBED
+
+[Service]
+Type=simple
+ExecStartPre=-/sbin/rmmod ftdi_sio
+ExecStartPre=-/sbin/rmmod usbserial 
+ExecStart=/ambed/ambed LOCAL-IP
+
+[Install]
+WantedBy=multi-user.target
+Alias=xlxd.service
