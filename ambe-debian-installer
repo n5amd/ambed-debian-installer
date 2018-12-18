@@ -12,49 +12,39 @@
 # ambed logs are part of /var/log/messages
 #Lets begin-------------------------------------------------------------------------------------------------
 WHO=$(whoami)
-#Have to be ROOT to run this script
 if [ "$WHO" != "root" ];
 then
   echo ""
   echo "You Must be root to run this script!!"
   exit 0
 fi
-
-#Has to be a Debian variant.
 if [ ! -e "/etc/debian_version" ]
 then
   echo ""
   echo "This script is only tested in Debian 8,9 and x64 cpu Arch. for now."
   exit 0
 fi
-
-#Gather variables
 DIRDIR=$(pwd)
 LOCAL_IP=$(ip a | grep inet | grep "eth0\|en" | awk '{print $2}' | tr '/' ' ' | awk '{print $1}')
 ARC=$(lscpu | grep Arch | awk '{print $2}')
 X64=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-x86_64-1.4.6.tgz
 X32=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-i386-1.4.6.tgz
-#ARM=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-arm-v7-hf-1.4.8.gz
-
-#Install dependencies
+AMBINSTDIR=/root/reflector-install-files/ambed
+DEP="wget git build-essential"
+GITREPO=https://github.com/LX3JL/xlxd.git
 echo "------------------------------------------------------------------------------"
-echo "Installing required software..."
-apt-get -y install wget
-apt-get -y install git
-apt-get -y install screen
-
-#XLX Specific
-apt-get -y install build-essential
-
-#Make Directories and get the FTDI driver.
+echo " Installing required software..."
+echo "------------------------------------------------------------------------------"
+apt-get -y install $DEP
 mkdir -p /ambed
-mkdir -p /root/reflector-install-files/ambed
+mkdir -p $AMBINSTDIR
 if [ ! -e /usr/local/lib/libftd2xx.so ]
 then
   echo ""
         echo "------------------------------------------------------------------------------"
-        echo "Downloading driver and installing it....."
-        cd /root/reflector-install-files/ambed
+        echo "Downloading and installing FTDI driver...."
+        echo "------------------------------------------------------------------------------"
+        cd $AMBINSTDIR
         if [ "$ARC" = "x86_64" ]
         then
                 wget $X64
@@ -75,41 +65,45 @@ else
         echo "------------------------------------------------------------------------------"
         echo "It looks like the driver is already installed. If this is wrong, see what '/usr/local/lib/libftd2xx.so' is up to. Skipping FTDI Driver install. "
 fi
-
-#Time to get the xlx/ambe software from git
 echo "------------------------------------------------------------------------------"
-echo "Getting xlx/ambed from github..."
-cd /root/reflector-install-files/ambed
-git clone https://github.com/LX3JL/xlxd.git
+echo "Downloading and installing AMBED..."
 echo "------------------------------------------------------------------------------"
-echo "Installing ambed....."
-cd /root/reflector-install-files/ambed/xlxd/ambed/
+cd $AMBINSTDIR
+git clone $GITREPO
+cd $AMBINSTDIR/xlxd/ambed/
 make clean
 make
 make install
 if [ -e ambed ]
 then
+        echo "------------------------------------------------------------------------------"
         echo "It looks like everything compiled successfully. There is an 'ambed' application file. "
+        echo "------------------------------------------------------------------------------"
         else
-        echo "/ambe directory exists already, I dont need to add it."
+        echo "------------------------------------------------------------------------------"
+        echo "I dont see an AMBED file after compiling. Look at the errors above and try again. Exiting....."
+        echo "------------------------------------------------------------------------------"
         exit 0
 fi
+echo ""
+echo ""
 echo "------------------------------------------------------------------------------"
 echo "Copying ambed files and systemd files... "
+echo "------------------------------------------------------------------------------"
 cp ambed /ambed
 cp $DIRDIR/templates/ambed.service /etc/systemd/system/
 sed -i "s/LOCAL-IP/$LOCAL_IP/g" /etc/systemd/system/ambed.service
 systemctl daemon-reload
-#That should be it for the install.
 echo ""
 echo ""
 echo "************************************************************************"
 echo ""
 echo ""
 echo "                   The install is complete.                             "
-echo "                     Now reboot the server.                             "
+echo "              ******* Now reboot the server. *******                    "
 echo "         Use 'systemctl status ambed' to check the status.              "
 echo "            ambed logs are part of /var/log/messages.                   "
+echo "      Just make sure this computer can be accessed over UDP 10100       "
 echo ""
 echo ""
 echo "************************************************************************"
