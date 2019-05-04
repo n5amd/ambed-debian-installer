@@ -26,4 +26,4 @@ https://github.com/n5amd/Multi-Reflector-Installer
 
 **For more information, please visit:**
 
-https://sadigitalradio.com/digital-radio-how-tos/build-digital-voice-transcoding-server/
+https://n5amd.com/digital-radio-how-tos/build-digital-voice-transcoding-server/
