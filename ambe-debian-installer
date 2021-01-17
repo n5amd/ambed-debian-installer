@@ -46,7 +46,7 @@ then
         echo "Downloading and installing FTDI driver...."
         echo "------------------------------------------------------------------------------"
         cd $AMBINSTDIR
-        if [ $ARC = x86_64 ];
+        if [ "$ARC" = "x86_64" ];
         then
                 wget $X64
                 tar xfvz libftd2xx-x86_64-1.4.6.tgz
@@ -54,7 +54,7 @@ then
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.6
                 ln -sf /usr/local/lib/libftd2xx.so.1.4.6 /usr/local/lib/libftd2xx.so
-        elif [ $ARC = armv71 ];
+        elif [ "$ARC" = "armv71" ];
         then
                 wget $ARM
                 tar libftd2xx-arm-v7-hf-1.4.22.tgz
@@ -62,7 +62,7 @@ then
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.22
                 ln -sf /usr/local/lib/libftd2xx.so.1.4.22 /usr/local/lib/libftd2xx.so
-        elif [ $ARC = i686 ];
+        elif [ "$ARC" = "i686" ];
         then
                 wget $X32
                 tar xfvz libftd2xx-i386-1.4.6.tgz
