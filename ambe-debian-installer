@@ -29,6 +29,7 @@ LOCAL_IP=$(ip a | grep inet | grep "eth0\|en" | awk '{print $2}' | tr '/' ' ' | 
 ARC=$(lscpu | grep Arch | awk '{print $2}')
 X64=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-x86_64-1.4.6.tgz
 X32=http://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-i386-1.4.6.tgz
+ARM=https://www.ftdichip.com/Drivers/D2XX/Linux/libftd2xx-arm-v7-hf-1.4.22.tgz
 AMBINSTDIR=/root/reflector-install-files/ambed
 DEP="wget git build-essential"
 GITREPO=https://github.com/LX3JL/xlxd.git
@@ -45,7 +46,7 @@ then
         echo "Downloading and installing FTDI driver...."
         echo "------------------------------------------------------------------------------"
         cd $AMBINSTDIR
-        if [ "$ARC" = "x86_64" ]
+        if [ $ARC = x86_64 ]
         then
                 wget $X64
                 tar xfvz libftd2xx-x86_64-1.4.6.tgz
@@ -53,13 +54,22 @@ then
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.6
                 ln -sf /usr/local/lib/libftd2xx.so.1.4.6 /usr/local/lib/libftd2xx.so
-        else
+        elif [ $ARC = armv71 ]
+        then
+                wget $ARM
+                tar libftd2xx-arm-v7-hf-1.4.22.tgz
+                cd release/build
+                cp libftd2xx.* /usr/local/lib
+                chmod 0755 /usr/local/lib/libftd2xx.so.1.4.22
+                ln -sf /usr/local/lib/libftd2xx.so.1.4.22 /usr/local/lib/libftd2xx.so
+        elif [ $ARC = x86_32 ]
+        then
                 wget $X32
                 tar xfvz libftd2xx-i386-1.4.6.tgz
                 cd release/build
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.6
-                ln -sf /usr/local/lib/libftd2xx.so.1.4.6 /usr/local/lib/libftd2xx.so
+                ln -sf /usr/local/lib/libftd2xx.so.1.4.6 /usr/local/lib/libftd2xx.so    
         fi
 else
         echo "------------------------------------------------------------------------------"
