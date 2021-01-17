@@ -62,14 +62,14 @@ then
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.22
                 ln -sf /usr/local/lib/libftd2xx.so.1.4.22 /usr/local/lib/libftd2xx.so
-        elif [ $ARC = x86_32 ]
+        elif [ $ARC = i686 ]
         then
                 wget $X32
                 tar xfvz libftd2xx-i386-1.4.6.tgz
                 cd release/build
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.6
-                ln -sf /usr/local/lib/libftd2xx.so.1.4.6 /usr/local/lib/libftd2xx.so    
+                ln -sf /usr/local/lib/libftd2xx.so.1.4.6 /usr/local/lib/libftd2xx.so
         fi
 else
         echo "------------------------------------------------------------------------------"
