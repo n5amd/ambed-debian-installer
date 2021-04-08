@@ -104,6 +104,7 @@ cp ambed /ambed
 cp $DIRDIR/templates/ambed.service /etc/systemd/system/
 sed -i "s/LOCAL-IP/$LOCAL_IP/g" /etc/systemd/system/ambed.service
 systemctl daemon-reload
+systemctl enable ambed
 echo ""
 echo ""
 echo "************************************************************************"
