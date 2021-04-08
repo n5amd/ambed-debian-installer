@@ -9,4 +9,4 @@ ExecStart=/ambed/ambed LOCAL-IP
 
 [Install]
 WantedBy=multi-user.target
-Alias=xlxd.service
+Alias=ambed.service
