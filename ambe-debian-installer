@@ -11,8 +11,7 @@
 # systemctl start ambed #to start ambed
 # ambed logs are part of /var/log/messages
 #Lets begin-------------------------------------------------------------------------------------------------
-WHO=$(whoami)
-if [ "$WHO" != "root" ];
+if [ "$EUID" -ne 0 ];
 then
   echo ""
   echo "You Must be root to run this script!!"
@@ -21,7 +20,7 @@ fi
 if [ ! -e "/etc/debian_version" ]
 then
   echo ""
-  echo "This script is only tested in Debian 8,9 and x64 cpu Arch. for now."
+  echo "This script is only tested in Debian 8,9,10. for now."
   exit 0
 fi
 DIRDIR=$(pwd)
@@ -54,10 +53,10 @@ then
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.6
                 ln -sf /usr/local/lib/libftd2xx.so.1.4.6 /usr/local/lib/libftd2xx.so
-        elif [ "$ARC" = "armv71" ];
+        elif [ "$ARC" = "armv7l" ];
         then
                 wget $ARM
-                tar libftd2xx-arm-v7-hf-1.4.22.tgz
+                tar zxf libftd2xx-arm-v7-hf-1.4.22.tgz
                 cd release/build
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.22
