@@ -57,7 +57,7 @@ then
         elif [ "$ARC" = "armv71" ];
         then
                 wget $ARM
-                tar libftd2xx-arm-v7-hf-1.4.22.tgz
+                tar xfvz libftd2xx-arm-v7-hf-1.4.22.tgz
                 cd release/build
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.22
