@@ -54,7 +54,7 @@ then
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.27
                 ln -sf /usr/local/lib/libftd2xx.so.1.4.27 /usr/local/lib/libftd2xx.so
-        elif [ "$ARC" = "armv71" ];
+        elif [[ "$ARC" = "armv71" || "$ARC" = "aarch64" ]];
         then
                 wget $ARM
                 tar xfvz libftd2xx-arm-v7-hf-1.4.27.tgz
