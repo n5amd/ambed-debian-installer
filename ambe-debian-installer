@@ -29,7 +29,7 @@ LOCAL_IP=$(ip a | grep inet | grep "eth0\|en" | awk '{print $2}' | tr '/' ' ' | 
 ARC=$(lscpu | grep Arch | awk '{print $2}')
 X64=https://ftdichip.com/wp-content/uploads/2022/07/libftd2xx-x86_64-1.4.27.tgz
 X32=https://ftdichip.com/wp-content/uploads/2022/07/libftd2xx-x86_32-1.4.27.tgz
-ARM=https://ftdichip.com/wp-content/uploads/2025/11/libftd2xx-linux-arm-v7-hf-1.4.34.tgz
+ARM=https://ftdichip.com/wp-content/uploads/2025/11/libftd2xx-linux-arm-v8-1.4.34.tgz
 AMBINSTDIR=/root/reflector-install-files/ambed
 DEP="wget git build-essential"
 GITREPO=https://github.com/LX3JL/xlxd.git
@@ -57,8 +57,8 @@ then
         elif [[ "$ARC" = "armv71" || "$ARC" = "aarch64" ]];
         then
                 wget $ARM
-                tar xfvz libftd2xx-linux-arm-v7-hf-1.4.34.tgz
-                cd linux-arm-v7-hf
+                tar xfvz libftd2xx-linux-arm-v8-1.4.34.tgz
+                cd linux-arm-v8
                 cp libftd2xx.* /usr/local/lib
                 chmod 0755 /usr/local/lib/libftd2xx.so.1.4.34
                 ln -sf /usr/local/lib/libftd2xx.so.1.4.34 /usr/local/lib/libftd2xx.so
